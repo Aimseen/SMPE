@@ -1,0 +1,34 @@
+---
+title: "Exo 5 shuttle"
+author: "Hélène Raynal"
+date: "21 avril 2020"
+output: html_document
+---
+
+
+### Création du vecteur des données
+
+
+```{r }
+dataShuttle <- read.csv("shuttle.csv",header=T)
+summary(dataShuttle)
+
+```
+### Vols où il y a eu des pb
+```{r }
+pb <- dataShuttle[dataShuttle$Malfunction>0,]
+pb
+
+```
+
+### Lien entre pb et température
+```{r }
+plot(data=pb, pb$Malfunction/Count ~ pb$Temperature, ylim=c(0,1))
+```
+
+### Régression logistique
+```{r }
+logistic_reg = glm(data=pb, Malfunction/Count ~ Temperature, weights=Count, 
+                   family=binomial(link='logit'))
+summary(logistic_reg)
+```
