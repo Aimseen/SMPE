@@ -1,0 +1,32 @@
+---
+title: "Batman"
+author: "Vincent RIBOT"
+date: "12/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+myData=read.table(file="bats.csv", sep=";", skip=3, header=TRUE)
+names(myData)
+
+phyto=myData[(myData$Diet==1),]
+reg1 = lm(BRW ~ BOW, data=phyto)
+summary(reg1)
+anova(reg1)
+plot(reg1$fitted.values, reg1$residuals, xlab = "Predicted", ylab = "Residuals")
+plot(reg1,4)
+which(phyto$BRW>8000)
+phytobis=phyto[which(phyto$BRW>8000),]
+
+reg2 = lm(BRW ~ BOW, data=phytobis)
+summary(reg2)
+
+par(mfcol=c(2,2))
+plot(reg1)
+```
+
+# 2 Study of ...

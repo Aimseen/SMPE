@@ -1,0 +1,50 @@
+---
+title: "anova"
+author: "Vincent RIBOT"
+date: "12/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+ble <- read.table(file="ble.txt", sep=";", dec=".", header=TRUE)
+ble
+```
+
+```{r}
+ggplot(ble, aes(x=variete, y=rdt)) +
+  geom_boxplot() +
+  ggtitle("Whisker boxes") +
+  xlab("Wheat variete") +
+  ylab("Yield")
+```
+```{r}
+ggplot(ble, aes(x=phyto, y=rdt)) +
+  geom_boxplot() +
+  ggtitle("Box plot") +
+  xlab("Phytosanitary treatment") +
+  ylab("Yield")
+```
+```{r}
+anova_variete <- lm(rdt~variete, data=ble)
+summary(anova_variete)
+```
+
+```{r}
+anova_phyto <- lm(rdt~phyto, data=ble)
+summary(anova_phyto)
+anova(anova_phyto)
+```
+# 3
+
+```{r}
+anova_variete_phyto <- lm(rdt~variete*phyto, data=ble)
+summary(anova_variete_phyto)
+anova(anova_variete_phyto)
+
+```
+
