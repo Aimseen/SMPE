@@ -1,0 +1,53 @@
+---
+title: "Challenger"
+author: "Vincent RIBOT"
+date: "12/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Presentation of the problem
+
+A statistical analysis have been made on the data below to know if the temperature can influence the malfunction of the O-ring component. There is the whole data:
+
+```{r}
+library(ggplot2)
+df <- read.csv("shuttle.csv",header=T)
+df
+```
+For the analysis, scientists thought they will only consider data where at least one malfunction occur. There is the data they decide to work with and exclude all measurement that does not involve a problem.
+```{r}
+pb <- df[df$Malfunction>0,]
+pb
+```
+
+
+# Source of the mistakes that led to the failure
+
+So by drawing the regression curve staying still no matter the temperature, they declare that the temperature does not influence the malfunction of any O-ring piece.
+```{r}
+ggplot( pb, aes(x=Temperature, y=Malfunction/Count)) +
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "glm", 
+    method.args = list(family=quasibinomial(link="logit")),
+    se = FALSE) +
+  xlim(20,90) +
+  ylim(0,1)
+```
+Their mistake was to exlue the bigger part of their data. Indeed here is what happen if we try to draw the regression curve considering all the data.
+We can clearly see with this slope that the more it gets cold, the higher is the probability to encounter a malfunction on O-rings. They have excluded the information showing where the O-rings usually do not have any malfunction (higher temperature) so they could not deuce that the colder it is the higher the risk is.
+```{r}
+ggplot( df, aes(x=Temperature, y=Malfunction/Count)) +
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "glm", 
+    method.args = list(family=quasibinomial(link="logit")),
+    se = FALSE) +
+  xlim(20,90) +
+  ylim(0,1)
+
+```
+
+
